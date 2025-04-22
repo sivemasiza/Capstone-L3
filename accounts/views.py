@@ -7,18 +7,29 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 def home(request):
+    """
+    View function for the home page.
+    Renders the home page template.
+    """
     return render(request, 'home.html')
 
 
 def register(request):
+    """
+    View function for user registration.
+    If the user is authenticated, redirects to the home page.
+    Handles the registration form, validates input, creates a new user, logs them in, and
+    redirects them to the home page with a success message.
+    If the form is invalid, shows error messages.
+    """
     if request.user.is_authenticated:
         return redirect('home')
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            user = form.save()  # Save the new user to the database
+            login(request, user)  # Log the user in immediately after registration
             messages.success(request, f'Account created successfully!')
             return redirect('home')
         else:
@@ -30,6 +41,13 @@ def register(request):
 
 
 def login_view(request):
+    """
+    View function for user login.
+    If the user is authenticated, redirects to the home page.
+    Handles the login form, validates the username and password, and authenticates the user.
+    If successful, logs the user in and redirects them to the home page.
+    If invalid credentials are provided, shows an error message.
+    """
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -52,6 +70,10 @@ def login_view(request):
 
 
 def logout_view(request):
+    """
+    View function for logging out the user.
+    Logs out the user and redirects them to the home page with a logout success message.
+    """
     logout(request)
     messages.info(request, 'You have been logged out.')
     return redirect('home')
@@ -59,4 +81,9 @@ def logout_view(request):
 
 @login_required
 def profile(request):
+    """
+    View function for the user profile page.
+    Only accessible to authenticated users.
+    Renders the user's profile page.
+    """
     return render(request, 'accounts/profile.html')
