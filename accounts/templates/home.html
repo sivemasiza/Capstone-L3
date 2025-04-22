@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Welcome to your Dashboard</h1>
+        <p>You're logged in as {{ user.username }}</p>
+        <h2><a href="{% url 'polls:index' %}">Go To Polls</a></h2>
+        <h2><a href="{% url 'blog:blog_list' %}">Go To Blog</a></h2>
+    {% else %}
+        <h1>Welcome to the Home Page</h1>
+        <p>Please log in or register</p>
+        <p>
+            <a href="{% url 'login' %}">Login</a> |
+            <a href="{% url 'register' %}">Register</a>
+        </p>
+    {% endif %}
+{% endblock %}
